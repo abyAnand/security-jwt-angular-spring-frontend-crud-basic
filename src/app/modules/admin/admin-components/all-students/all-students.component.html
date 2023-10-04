@@ -1,5 +1,7 @@
+
+
 <div class="card-container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px">
-  <mat-card class="student-card" *ngFor="let student of students">
+  <mat-card class="student-card" *ngFor="let student of users$ | async">
       <mat-card-header style="background-color: #3f51b5;">
           <mat-card-title style="color: white;">Name:  <strong> {{ student.name | titlecase }}</strong> </mat-card-title>
           <mat-card-subtitle style="color: white;">Role: <strong> {{ student.role }}</strong> </mat-card-subtitle>

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../admin-service/admin.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { AppStateInterface } from 'src/app/Store/types/appState.interface';
+import * as UserActions from '../../Store/actions';
 
 @Component({
   selector: 'app-post-student',
@@ -15,7 +18,7 @@ export class PostStudentComponent implements OnInit{
         name: ['', Validators.required],
         email: ['', Validators.required],
         password: ['', Validators.required],
-        checkPassword: ['', Validators.required, this.confirmationValidator],
+        checkPassword: ['', Validators.required,  this.confirmationValidator],
         // dob: ['', Validators.required],
         address: ['', Validators.required],
         role: ['', Validators.required],
@@ -23,7 +26,7 @@ export class PostStudentComponent implements OnInit{
       })
   }
 
-  confirmationValidator = (control : FormControl): {[s: string]: boolean} =>{
+  confirmationValidator = async (control : FormControl): Promise<{[s: string]: boolean}> =>{
     if(!control.value){
       return {requred: true};
     }else if(control.value !== this.validateForm.controls["password"].value){
@@ -35,7 +38,8 @@ export class PostStudentComponent implements OnInit{
   constructor(
     private service: AdminService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private store: Store<AppStateInterface>
   ){}
 
   isSpinning: boolean;
@@ -49,18 +53,11 @@ export class PostStudentComponent implements OnInit{
 
   postStudent(){
     console.log(this.validateForm.value);
-    this.isSpinning = true;
-    this.service.addStudent(this.validateForm.value).subscribe((res)=>{
-      this.isSpinning = false;
+    console.log(this.validateForm.enabled);
 
-      if(res.user.userId != null){
-        this.snackBar.open("User Saved Successfully", "Close", {duration: 5000});
-      }
-      else{
-        this.snackBar.open("Student already exist", "Close", {duration: 5000});
-      }
-      console.log(res);
-    })
+    this.isSpinning = false;
+    this.store.dispatch(UserActions.createUser({user: this.validateForm.value}));
+
   }
 
 

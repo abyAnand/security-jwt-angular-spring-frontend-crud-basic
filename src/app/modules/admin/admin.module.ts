@@ -19,6 +19,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AllStudentsComponent } from './admin-components/all-students/all-students.component';
 import { UpdateStudentComponent } from './admin-components/update-student/update-student.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './Store/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './Store/effects';
 
 
 @NgModule({
@@ -43,7 +47,9 @@ import { UpdateStudentComponent } from './admin-components/update-student/update
     ReactiveFormsModule,
     FormsModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    StoreModule.forFeature('users', reducers),
+    EffectsModule.forFeature([UserEffects])
 
   ]
 })
